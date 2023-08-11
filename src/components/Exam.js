@@ -61,5 +61,5 @@ export default function Exam({ examData }) {
         )
     }
 
-    return <div className="flex flex-row justify-center"><ul>{questionsArr}</ul></div>
+    return <div className="flex flex-row justify-center m-5"><ul>{questionsArr}</ul></div>
 }

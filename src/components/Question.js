@@ -19,54 +19,87 @@ export default function Question({ questionObj, answers, setAnswers }) {
         setAnswers(tmpAnswer);
     }
 
+    let isTwoColumn = true; // Whether the options will be two column or single column
+    for (let i = 0; i < 4; i++) {
+        if (questionObj.options[i].length > 10) {
+            isTwoColumn = false;
+            break;
+        }
+    }
+
+    // For two column we need to swap position of B and C in order to get
+    // A B
+    // C D
+    // E
+    // If we don't do this...we get
+    // A C
+    // B D
+    // E ... which is confusing
+
+    let optionBC = [
+        <Form.Check
+            type='radio'
+            id={questionObj.id + "-B"}
+            name="group1"
+            label={" B. " + questionObj.options[1]}
+            onChange={handler}
+        />,
+        <Form.Check
+            type='radio'
+            id={questionObj.id + "-C"}
+            name="group1"
+            label={" C. " + questionObj.options[2]}
+            onChange={handler}
+        />
+    ];
+
+    if (isTwoColumn) {
+        optionBC.reverse();
+    }
     return <div className='flex flex-row gap-5 my-5'>
         <div>
             <p>{questionObj.id}.</p>
         </div>
-        <div>
+        <div className='sm:w-96 w-80 min-w-full'>
             <p className='mb-3 text-lg'>{questionObj.body}</p>
             {
-                (questionObj.image == null ? "" : <Image src={questionObj.image} width={400} height={300} />)
+                (questionObj.image == null ? "" : <Image src={questionObj.image} width={300} height={200} />)
             }
             <Form className='mt-3'>
                 <div key={questionObj.id}>
-                    <Form.Check
-                        type='radio'
-                        id={questionObj.id + "-A"}
-                        name="group1"
-                        label={" A. " + questionObj.options[0]}
-                        onChange={handler}
-                    />
-                    <Form.Check
-                        type='radio'
-                        id={questionObj.id + "-B"}
-                        name="group1"
-                        label={" B. " + questionObj.options[1]}
-                        onChange={handler}
-                    />
-                    <Form.Check
-                        type='radio'
-                        id={questionObj.id + "-C"}
-                        name="group1"
-                        label={" C. " + questionObj.options[2]}
-                        onChange={handler}
-                    />
-                    <Form.Check
-                        type='radio'
-                        id={questionObj.id + "-D"}
-                        name="group1"
-                        label={" D. " + questionObj.options[3]}
-                        onChange={handler}
-                    />
-                    {
-                        questionObj.options[4] == null ? "" :
+                    <div className={isTwoColumn ? 'grid grid-cols-2 gap-8' : ""}>
+                        <div>
                             <Form.Check
                                 type='radio'
-                                id={questionObj.id + "-E"}
+                                id={questionObj.id + "-A"}
                                 name="group1"
-                                label={" E. " + questionObj.options[4]}
+                                label={" A. " + questionObj.options[0]}
                                 onChange={handler}
                             />
+                            {optionBC[0]}
+                        </div>
+                        <div>
+                            {optionBC[1]}
+                            <Form.Check
+                                type='radio'
+                                id={questionObj.id + "-D"}
+                                name="group1"
+                                label={" D. " + questionObj.options[3]}
+                                onChange={handler}
+                            />
+                        </div>
+                    </div>
+                    {
+                        questionObj.options[4] == null ? "" :
+                            <div>
+                                <Form.Check
+                                    type='radio'
+                                    id={questionObj.id + "-E"}
+                                    name="group1"
+                                    label={" E. " + questionObj.options[4]}
+                                    onChange={handler}
+                                />
+                            </div>
                     }
                 </div>
             </Form>
