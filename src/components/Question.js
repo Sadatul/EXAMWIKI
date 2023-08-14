@@ -60,14 +60,21 @@ export default function Question({ questionObj, answers, setAnswers }) {
         <div>
             <p>{questionObj.id}.</p>
         </div>
-        <div className='sm:w-96 w-80 min-w-full'>
+        <div className='grow'>
             <p className='mb-3 text-lg'>{questionObj.body}</p>
             {
-                (questionObj.image == null ? "" : <Image src={questionObj.image} width={300} height={200} />)
+                (questionObj.image == null ? "" :
+                    <div className='relative h-32 md:h-72'>
+                        <Image src={questionObj.image}
+                            layout='fill'
+                            objectFit='contain'
+                            style={{ maxWidth: "500px" }}
+                        />
+                    </div>)
             }
-            <Form className='mt-3'>
+            <Form className='mt-3' style={{ maxWidth: "700px" }}>
                 <div key={questionObj.id}>
-                    <div className={isTwoColumn ? 'grid grid-cols-2 gap-8' : ""}>
+                    <div className={isTwoColumn ? 'grid grid-cols-2' : ""}>
                         <div>
                             <Form.Check
                                 type='radio'
