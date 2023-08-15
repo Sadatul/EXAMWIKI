@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import Exam from '@/components/Exam'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -12,7 +13,13 @@ export default function Home() {
 
   return (
     <main>
-      <Exam examData={examData} />
+      <Link
+        href={{
+          pathname: '/exam/practice',
+          query: { examData: 'my-post' },
+        }}
+      >Go to Exam</Link>
+      {/* <Exam examData={examData} /> */}
     </main>
   )
 }

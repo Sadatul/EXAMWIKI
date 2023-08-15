@@ -21,44 +21,17 @@ import useSWR from 'swr';
 //     image: "https://picsum.photos/400/300"
 // }
 
-export default function Exam({ examData }) {
-    let initialAnswer = new Array(examData.questionCount).fill(null);
+export default function Exam({ questionsData }) {
+    let initialAnswer = new Array(questionsData.questionCount).fill(null);
     const [answers, setAnswers] = useState(initialAnswer)
     // un-answered questions will remain NULL
     console.log(answers);
 
-    // Fetching data from database use hello api
-    const fetcher = (url) => fetch(url).then(res => res.json());
-    const { data, error, isLoading } = useSWR('/api/hello', fetcher)
-    if (error) return <div>failed to load</div>
-    if (isLoading) return <div>loading...</div>
-
-    let result = data;
-
-    console.log(result);
-
-    // Where we are doing some dummy data generation just for show casing purposes
-
-    examData.questionCount = result.length // THIS IS JUST FOR SHOW CASING..
-    // MUST DELETE THIS LINE
-
-    let questionsDataArr = [];
-    for (let i = 0; i < examData.questionCount; i++) {
-        let tmp = {
-            id: i + 1,
-            body: result[i].body,
-            options: [result[i].optionA, result[i].optionB, result[i].optionC, result[i].optionD, result[i].optionE],
-            image: result[i].image
-
-        };
-        questionsDataArr.push(tmp);
-    }
-
-    let len = examData.questionCount;
+    let len = questionsData.questionCount;
     let questionsArr = [];
     for (let i = 0; i < len; i++) {
         questionsArr.push(
-            <li key={i}><Question questionObj={questionsDataArr[i]} answers={answers} setAnswers={setAnswers} /></li>
+            <li key={i}><Question questionObj={questionsData.array[i]} answers={answers} setAnswers={setAnswers} /></li>
         )
     }
 
