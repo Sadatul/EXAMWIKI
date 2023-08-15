@@ -33,8 +33,9 @@ export default function Exam({ examData }) {
     if (error) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
 
-    let result = data.rows;
+    let result = data;
 
+    console.log(result);
 
     // Where we are doing some dummy data generation just for show casing purposes
 
@@ -45,9 +46,9 @@ export default function Exam({ examData }) {
     for (let i = 0; i < examData.questionCount; i++) {
         let tmp = {
             id: i + 1,
-            body: result[i][1],
-            options: [result[i][3], result[i][4], result[i][5], result[i][6], result[i][7]],
-            image: result[i][2]
+            body: result[i].body,
+            options: [result[i].optionA, result[i].optionB, result[i].optionC, result[i].optionD, result[i].optionE],
+            image: result[i].image
 
         };
         questionsDataArr.push(tmp);
