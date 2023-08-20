@@ -11,16 +11,17 @@ export default function practiceExamPage({ questionsData }) {
 
 export const getServerSideProps = async (context) => {
     let examData = context.query.examData;
-    let questionsData = {
-        error: true,
-        questionCount: 10,
-        array: []
-    }
-
     // If the user doesn't follow proper procedure to get to this page
     // then redirect them to the home exam page
     if (!examData) {
         return { redirect: { destination: '/exam', permanent: false } }
+    }
+    examData = JSON.parse(examData);
+    console.log(examData);
+    let questionsData = {
+        error: true,
+        questionCount: 10,
+        array: []
     }
 
     questionsData.error = false;

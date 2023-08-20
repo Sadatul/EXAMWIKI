@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { runQueryFromFile } from '@/utils/runQuery';
 
@@ -30,12 +30,12 @@ export default function examHome({ repo }) {
         classList.add(topicInfo[i].class);
     }
     let classOptionList = [];
+    let i = 0;
     for (let item of classList) {
-        classOptionList.push(<option value={item}>{item}</option>);
+        classOptionList.push(<option key={i++} value={item}>{item}</option>);
     }
 
     // Extracting all unique the subjects from the topicInfo table under the currently selected class.
-
     let subjectList = new Set();
     let subjectOptionList = [];
     if (examData.class != "") {
@@ -44,11 +44,39 @@ export default function examHome({ repo }) {
                 subjectList.add(topicInfo[i].subject);
             }
         }
+        let i = 0;
         for (let item of subjectList) {
-            subjectOptionList.push(<option value={item}>{item}</option>);
+            subjectOptionList.push(<option key={i++} value={item}>{item}</option>);
         }
     }
 
+    let chapterList = new Set();
+    let chapterOptionList = [];
+    if (examData.subject != "") {
+        for (let i = 0; i < topicInfo.length; i++) {
+            if (topicInfo[i].class == examData.class && topicInfo[i].subject == examData.subject) {
+                chapterList.add(topicInfo[i].chapter);
+            }
+        }
+        let i = 0;
+        for (let item of chapterList) {
+            chapterOptionList.push(<option key={i++} value={item}>{item}</option>);
+        }
+    }
+
+    let topicList = new Set();
+    let topicOptionList = [];
+    if (examData.chapter != "") {
+        for (let i = 0; i < topicInfo.length; i++) {
+            if (topicInfo[i].class == examData.class && topicInfo[i].subject == examData.subject && topicInfo[i].chapter == examData.chapter) {
+                topicList.add(topicInfo[i].topic);
+            }
+        }
+        let i = 0;
+        for (let item of topicList) {
+            topicOptionList.push(<option key={i++} value={item}>{item}</option>);
+        }
+    }
     return (
         <div>
             <Form>
@@ -109,13 +137,49 @@ export default function examHome({ repo }) {
                         {subjectOptionList}
                     </Form.Select>
                 </Form.Group>
+                <Form.Group controlId="chapter">
+                    <Form.Select aria-label="Default select example"
+                        id='eh-chapter' // eh = exam home
+                        onChange={(e) => {
+                            let tmp = { ...examData };
+                            tmp.chapter = e.target.value;
+                            tmp.topic = "";
+                            setExamData(tmp);
+                        }} disabled={examData.subject == ""}>
+                        <option value="">Select Chapter</option>
+                        {chapterOptionList}
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group controlId="topic">
+                    <Form.Select aria-label="Default select example"
+                        id='eh-topic' // eh = exam home
+                        onChange={(e) => {
+                            let tmp = { ...examData };
+                            tmp.topic = e.target.value;
+                            setExamData(tmp);
+                        }} disabled={examData.chapter == ""}>
+                        <option value="">Select Topic</option>
+                        {topicOptionList}
+                    </Form.Select>
+                </Form.Group>
             </Form>
-            <Link
+            {/* <Link
                 href={{
                     pathname: '/exam/practice',
                     query: { examData: 'my-post' },
                 }}
-            >Go to Exam</Link>
+            ></Link> */}
+            <Button href={'/exam/practice' + "?" + new URLSearchParams({
+                examData: JSON.stringify(examData)
+            })} variant="primary" disabled={
+                examData.difficulty == -1
+                || examData.questionCount == -1
+                || examData.chapter == ""
+                || examData.class == ""
+                || examData.subject == ""
+                || examData.topic == ""}> Goto Exam
+            </Button>
+
             {/* <Exam examData={examData} /> */}
         </div>
     )
