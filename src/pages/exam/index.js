@@ -78,9 +78,10 @@ export default function examHome({ repo }) {
         }
     }
     return (
-        <div>
-            <Form>
-                <Form.Group controlId="difficult">
+        <div className='flex flex-row justify-center mt-5'>
+            <Form className='w-1/2 p-10 bg-slate-100 rounded-2xl'>
+                <h1 className='mb-6 text-sky-600'>Test Your Self</h1>
+                <Form.Group className='m-2' controlId="difficult">
                     <Form.Select aria-label="Default select example"
                         id='eh-difficulty' // eh = exam home
                         onChange={(e) => {
@@ -94,7 +95,7 @@ export default function examHome({ repo }) {
                         <option value="3">Hard</option>
                     </Form.Select>
                 </Form.Group>
-                <Form.Group controlId="questionCount">
+                <Form.Group className='m-2' controlId="questionCount">
                     <Form.Select aria-label="Default select example"
                         id='eh-questionCount' // eh = exam home
                         onChange={(e) => {
@@ -108,7 +109,7 @@ export default function examHome({ repo }) {
                         <option value="100">100</option>
                     </Form.Select>
                 </Form.Group>
-                <Form.Group controlId="class">
+                <Form.Group className='m-2' controlId="class">
                     <Form.Select aria-label="Default select example"
                         id='eh-class' // eh = exam home
                         onChange={(e) => {
@@ -123,7 +124,7 @@ export default function examHome({ repo }) {
                         {classOptionList}
                     </Form.Select>
                 </Form.Group>
-                <Form.Group key={examData.class} controlId="subject">
+                <Form.Group className='m-2' key={examData.class} controlId="subject">
                     <Form.Select aria-label="Default select example"
                         id='eh-subject' // eh = exam home
                         onChange={(e) => {
@@ -137,7 +138,7 @@ export default function examHome({ repo }) {
                         {subjectOptionList}
                     </Form.Select>
                 </Form.Group>
-                <Form.Group controlId="chapter">
+                <Form.Group className='m-2' controlId="chapter">
                     <Form.Select aria-label="Default select example"
                         id='eh-chapter' // eh = exam home
                         onChange={(e) => {
@@ -150,7 +151,7 @@ export default function examHome({ repo }) {
                         {chapterOptionList}
                     </Form.Select>
                 </Form.Group>
-                <Form.Group controlId="topic">
+                <Form.Group className='m-2' controlId="topic">
                     <Form.Select aria-label="Default select example"
                         id='eh-topic' // eh = exam home
                         onChange={(e) => {
@@ -162,6 +163,18 @@ export default function examHome({ repo }) {
                         {topicOptionList}
                     </Form.Select>
                 </Form.Group>
+                <div className='flex flex-row justify-end mr-3'>
+                    <Button href={'/exam/practice' + "?" + new URLSearchParams({
+                        examData: JSON.stringify(examData)
+                    })} variant="primary" disabled={
+                        examData.difficulty == -1
+                        || examData.questionCount == -1
+                        || examData.chapter == ""
+                        || examData.class == ""
+                        || examData.subject == ""
+                        || examData.topic == ""}> Goto Exam
+                    </Button>
+                </div>
             </Form>
             {/* <Link
                 href={{
@@ -169,16 +182,6 @@ export default function examHome({ repo }) {
                     query: { examData: 'my-post' },
                 }}
             ></Link> */}
-            <Button href={'/exam/practice' + "?" + new URLSearchParams({
-                examData: JSON.stringify(examData)
-            })} variant="primary" disabled={
-                examData.difficulty == -1
-                || examData.questionCount == -1
-                || examData.chapter == ""
-                || examData.class == ""
-                || examData.subject == ""
-                || examData.topic == ""}> Goto Exam
-            </Button>
 
             {/* <Exam examData={examData} /> */}
         </div>

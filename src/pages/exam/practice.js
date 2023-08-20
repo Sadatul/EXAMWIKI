@@ -1,5 +1,7 @@
 import Exam from "@/components/Exam";
-import { runQueryFromFile } from "@/utils/runQuery";
+// import { runQueryFromFile } from "@/utils/runQuery";
+import oracledb from 'oracledb';
+
 
 export default function practiceExamPage({ questionsData }) {
     // console.log(questionsData);
@@ -18,16 +20,44 @@ export const getServerSideProps = async (context) => {
     }
     examData = JSON.parse(examData);
     console.log(examData);
+
     let questionsData = {
-        error: true,
-        questionCount: 10,
+        error: false,
+        questionCount: examData.questionCount,
         array: []
     }
 
-    questionsData.error = false;
-    const result = await runQueryFromFile('getAllQuestions');
+    try {
+        oracledb.getPool();
+    } catch (e) {
+        await oracledb.createPool({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectString: process.env.DB_CONNECT_STRING,
+        });
+    }
+    const connection = await oracledb.getConnection();
+    const query = `BEGIN
+            GENERATE_QUESTION(:diff, :questionCount, :p_cur, :class, :subject, :chapter, :topic);
+        END;`;
+    const data = await connection.execute(
+        query,
+        {
+            diff: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: examData.difficulty },
+            questionCount: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: examData.questionCount },
+            p_cur: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+            class: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: examData.class },
+            subject: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: examData.subject },
+            chapter: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: examData.chapter },
+            topic: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: examData.topic },
+        }
+    );
 
-    questionsData.questionCount = result.length;
+    const resultSet = data.outBinds.p_cur;
+    const result = await resultSet.getRows();
+    // const result = await runQueryFromFile('getAllQuestions');
+
+    // questionsData.questionCount = result.length;
 
     for (let i = 0; i < questionsData.questionCount; i++) {
         let tmp = {
