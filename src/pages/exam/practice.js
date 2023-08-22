@@ -1,14 +1,20 @@
 import Exam from "@/components/Exam";
 // import { runQueryFromFile } from "@/utils/runQuery";
 import oracledb from 'oracledb';
+import { Button } from 'react-bootstrap';
 
+const studentUsername = "sadi";
+const examId = "auto"; // This will generate an unique exam id in the database for each exam
+const examDuration = 30;
 
 export default function practiceExamPage({ questionsData }) {
     // console.log(questionsData);
 
     // If the user doesn't follow proper procedure to get to this page
     // then redirect them to the home exam page
-    return <Exam questionsData={questionsData} />
+    return <div className="w-3/4">
+        <Exam questionsData={questionsData} />
+    </div>
 }
 
 export const getServerSideProps = async (context) => {
@@ -58,6 +64,40 @@ export const getServerSideProps = async (context) => {
     // const result = await runQueryFromFile('getAllQuestions');
 
     // questionsData.questionCount = result.length;
+
+    let questionIds = [];
+    for (let i = 0; i < result.length; i++) {
+        questionIds.push(result[i].id);
+    }
+    console.log(questionIds);
+
+    const query2 = `BEGIN
+            INSERTION_PACKAGE.EXAM_INFO_INSERT(:students, :questions, :examId, :duration);
+        END;`;
+    await connection.execute(
+        query2,
+        {
+            students: {
+                dir: oracledb.BIND_IN,
+                type: oracledb.STRING,
+                val: [studentUsername]
+            },
+            questions: {
+                dir: oracledb.BIND_IN,
+                type: oracledb.NUMBER,
+                val: questionIds
+            },
+            examId: {
+                dir: oracledb.BIND_IN,
+                type: oracledb.STRING,
+                val: examId
+            },
+            duration: {
+                dir: oracledb.BIND_IN,
+                type: oracledb.NUMBER,
+                val: examDuration
+            }
+        });
 
     for (let i = 0; i < questionsData.questionCount; i++) {
         let tmp = {

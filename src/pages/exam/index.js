@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { runQueryFromFile } from '@/utils/runQuery';
+import { useRouter } from 'next/router'
 
 const initialExamData = {
     questionCount: -1,
@@ -19,6 +20,7 @@ export default function examHome({ repo }) {
     // console.log(topicInfo);
 
     const [examData, setExamData] = useState(initialExamData);
+    const router = useRouter();
     console.log(examData);
 
     // Repo stores the entire topic info table.
@@ -164,15 +166,20 @@ export default function examHome({ repo }) {
                     </Form.Select>
                 </Form.Group>
                 <div className='flex flex-row justify-end mr-3'>
-                    <Button href={'/exam/practice' + "?" + new URLSearchParams({
-                        examData: JSON.stringify(examData)
-                    })} variant="primary" disabled={
+                    <Button variant="primary" disabled={
                         examData.difficulty == -1
                         || examData.questionCount == -1
                         || examData.chapter == ""
                         || examData.class == ""
                         || examData.subject == ""
-                        || examData.topic == ""}> Goto Exam
+                        || examData.topic == ""}
+                        onClick={() => {
+                            router.push({
+                                pathname: '/exam/practice',
+                                query: { examData: JSON.stringify(examData) },
+                            })
+                        }}
+                    > Goto Exam
                     </Button>
                 </div>
             </Form>

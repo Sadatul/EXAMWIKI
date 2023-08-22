@@ -13,23 +13,37 @@ export default async function handler(req, res) {
     }
     const connection = await oracledb.getConnection();
     const query = `BEGIN
-            GENERATE_QUESTION(:diff, :questionCount, :p_cur, :class, :subject, :chapter, :topic);
+            INSERTION_PACKAGE.EXAM_INFO_INSERT(:students, :questions, :examId, :duration);
         END;`;
     const result = await connection.execute(
         query,
         {
-            diff: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: 1 },
-            questionCount: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: 20 },
-            p_cur: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
-            class: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: 'HSC' },
-            subject: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: 'Bangla' },
-            chapter: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: 'chapter01' },
-            topic: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: 'topic01' },
+            students: {
+                dir: oracledb.BIND_IN,
+                type: oracledb.STRING,
+                val: ["sadi"]
+            },
+            questions: {
+                dir: oracledb.BIND_IN,
+                type: oracledb.NUMBER,
+                val: [1, 2, 3, 4, 5]
+            },
+            examId: {
+                dir: oracledb.BIND_IN,
+                type: oracledb.STRING,
+                val: "exam01"
+            },
+            duration: {
+                dir: oracledb.BIND_IN,
+                type: oracledb.NUMBER,
+                val: 30
+            }
+
         }
     );
 
-    const resultSet = result.outBinds.p_cur;
-    const resultRows = await resultSet.getRows();
-    console.log(resultRows.length);
-    res.status(200).json({ data: resultRows });
+    // const resultSet = result.outBinds.p_cur;
+    // const resultRows = await resultSet.getRows();
+    // console.log(resultRows.length);
+    res.status(200).json({ data: "PACKED" });
 }

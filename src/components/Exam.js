@@ -12,6 +12,7 @@
 import Question from "./Question";
 import { useState } from 'react';
 import useSWR from 'swr';
+import { Button } from 'react-bootstrap';
 
 
 // const dummyQuestion = {
@@ -35,7 +36,14 @@ export default function Exam({ questionsData }) {
         )
     }
 
-    return <div className="flex flex-row justify-center">
-        <ul className="w-3/4">{questionsArr}</ul>
+    return <div>
+        <div className="flex flex-row justify-center">
+            <ul className="w-3/4">{questionsArr}</ul>
+        </div>
+        <div className='flex flex-row justify-center mb-10'>
+            <Button href='#' variant="primary" style={{ width: '50%' }}>
+                Submit
+            </Button>
+        </div>
     </div>
 }
