@@ -30,7 +30,8 @@ export const getServerSideProps = async (context) => {
     let questionsData = {
         error: false,
         questionCount: examData.questionCount,
-        array: []
+        array: [],
+        examId: ""
     }
 
     try {
@@ -72,9 +73,9 @@ export const getServerSideProps = async (context) => {
     console.log(questionIds);
 
     const query2 = `BEGIN
-            INSERTION_PACKAGE.EXAM_INFO_INSERT(:students, :questions, :examId, :duration);
+            INSERTION_PACKAGE.EXAM_INFO_INSERT(:students, :questions, :examId, :duration, :confirmedExamId);
         END;`;
-    await connection.execute(
+    const result2 = await connection.execute(
         query2,
         {
             students: {
@@ -87,7 +88,8 @@ export const getServerSideProps = async (context) => {
                 type: oracledb.NUMBER,
                 val: questionIds
             },
-            examId: {
+            examId: { // An exam id is passed but this is not confimed. The confirmed exam id will be
+                // returned by the procedure
                 dir: oracledb.BIND_IN,
                 type: oracledb.STRING,
                 val: examId
@@ -96,9 +98,15 @@ export const getServerSideProps = async (context) => {
                 dir: oracledb.BIND_IN,
                 type: oracledb.NUMBER,
                 val: examDuration
+            },
+            confirmedExamId: {
+                dir: oracledb.BIND_OUT,
+                type: oracledb.STRING
             }
         });
 
+    questionsData.examId = result2.outBinds.confirmedExamId;
+    console.log(questionsData.examId);
     for (let i = 0; i < questionsData.questionCount; i++) {
         let tmp = {
             id: i + 1,
