@@ -13,6 +13,7 @@ import Question from "./Question";
 import { useState } from 'react';
 import useSWR from 'swr';
 import { Button } from 'react-bootstrap';
+import { useRouter } from 'next/router';
 
 
 // const dummyQuestion = {
@@ -23,6 +24,7 @@ import { Button } from 'react-bootstrap';
 // }
 
 export default function Exam({ questionsData }) {
+    let router = useRouter();
     let initialAnswer = new Array(questionsData.questionCount).fill(null);
     const [answers, setAnswers] = useState(initialAnswer)
     // un-answered questions will remain NULL
@@ -41,7 +43,29 @@ export default function Exam({ questionsData }) {
             <ul className="w-3/4">{questionsArr}</ul>
         </div>
         <div className='flex flex-row justify-center mb-10'>
-            <Button href='#' variant="primary" style={{ width: '50%' }}>
+            <Button variant="primary" style={{ width: '50%' }}
+                onClick={() => {
+                    let tmp = [];
+                    for (let i = 0; i < questionsData.questionCount; i++) {
+                        tmp.push([questionsData.questionIds[i], answers[i] === null ? 'N' : answers[i]]);
+                    }
+                    tmp.sort();
+                    let answerStr = '';
+                    for (let i = 0; i < questionsData.questionCount; i++) {
+                        answerStr += tmp[i][1];
+                    }
+
+                    router.push({
+                        pathname: '/exam/exam_result',
+                        query: {
+                            message: 'Submission Successful',
+                            examId: questionsData.examId,
+                            answers: answerStr
+                        }
+                    })
+
+                }}
+            >
                 Submit
             </Button>
         </div>

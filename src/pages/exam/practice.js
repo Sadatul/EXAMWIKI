@@ -31,7 +31,8 @@ export const getServerSideProps = async (context) => {
         error: false,
         questionCount: examData.questionCount,
         array: [],
-        examId: ""
+        examId: "",
+        questionIds: [] // This will be used to track the question ids in exact order
     }
 
     try {
@@ -66,11 +67,11 @@ export const getServerSideProps = async (context) => {
 
     // questionsData.questionCount = result.length;
 
-    let questionIds = [];
     for (let i = 0; i < result.length; i++) {
-        questionIds.push(result[i].id);
+        // questionIds.push(result[i].id);
+        questionsData.questionIds.push(result[i].id);
     }
-    console.log(questionIds);
+    console.log(questionsData.questionIds);
 
     const query2 = `BEGIN
             INSERTION_PACKAGE.EXAM_INFO_INSERT(:students, :questions, :examId, :duration, :confirmedExamId);
@@ -86,7 +87,7 @@ export const getServerSideProps = async (context) => {
             questions: {
                 dir: oracledb.BIND_IN,
                 type: oracledb.NUMBER,
-                val: questionIds
+                val: questionsData.questionIds
             },
             examId: { // An exam id is passed but this is not confimed. The confirmed exam id will be
                 // returned by the procedure
@@ -112,10 +113,12 @@ export const getServerSideProps = async (context) => {
             id: i + 1,
             body: result[i].body,
             options: [result[i].optionA, result[i].optionB, result[i].optionC, result[i].optionD, result[i].optionE],
-            image: result[i].image
-
+            image: result[i].image,
         };
         questionsData.array.push(tmp);
     }
+
+    await connection.close();
+
     return { props: { questionsData } }
 }
