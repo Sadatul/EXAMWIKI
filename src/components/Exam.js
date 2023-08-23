@@ -29,6 +29,7 @@ export default function Exam({ questionsData }) {
     const [answers, setAnswers] = useState(initialAnswer)
     // un-answered questions will remain NULL
     console.log(answers);
+    console.log(questionsData.questionIds);
 
     let len = questionsData.questionCount;
     let questionsArr = [];
@@ -49,7 +50,8 @@ export default function Exam({ questionsData }) {
                     for (let i = 0; i < questionsData.questionCount; i++) {
                         tmp.push([questionsData.questionIds[i], answers[i] === null ? 'N' : answers[i]]);
                     }
-                    tmp.sort();
+                    tmp.sort((a, b) => a[0] - b[0]);
+                    console.log(tmp);
                     let answerStr = '';
                     for (let i = 0; i < questionsData.questionCount; i++) {
                         answerStr += tmp[i][1];

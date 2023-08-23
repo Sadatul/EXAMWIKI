@@ -56,7 +56,7 @@ export default function Question({ questionObj, answers, setAnswers }) {
     if (isTwoColumn) {
         optionBC.reverse();
     }
-    return <div className='flex flex-row gap-2 my-5'>
+    return <div className='flex flex-row gap-2 my-5 bg-slate-100 rounded-2xl p-8 shadow-lg'>
         <div>
             <p>{questionObj.id}.</p>
         </div>

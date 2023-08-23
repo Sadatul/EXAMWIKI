@@ -7,13 +7,19 @@ const studentUsername = "sadi";
 
 export default function examResultPage({ resultData }) {
     const router = useRouter();
+    // resultData.correctCount = 20;
+    let status = resultData.message == 'Submission Successful';
 
-    return <div>
-        <div>
-            <h2>{resultData.message}</h2>
-            <h1>You have scored {resultData.correctCount} / {resultData.questionCount}</h1>
-            <div>
-                <Button variant="primary"
+    return <div className='flex flex-row justify-center mt-5'>
+        <div className={'w-1/2 bg-slate-100 rounded-2xl p-10 shadow-2xl ' +
+            (resultData.correctCount > 0.5 * resultData.questionCount ? 'shadow-green-500' : 'shadow-red-500')
+        }>
+            <p className={'text-center text-2xl font-bold ' + (status ? 'text-green-500' : 'text-red-500')}>
+                {resultData.message}</p>
+            <p className='text-center mt-10 text-4xl font-bold'>Your Score: </p>
+            <p className='text-center mb-10 text-4xl font-bold'> {resultData.correctCount} / {resultData.questionCount}</p>
+            <div className='flex flex-row justify-evenly'>
+                <Button variant={resultData.correctCount > 0.5 * resultData.questionCount ? "success" : "danger"}
                     onClick={() => {
                         router.push({
                             pathname: '/exam',
