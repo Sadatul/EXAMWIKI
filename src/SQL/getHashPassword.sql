@@ -1,0 +1,1 @@
+SELECT "hashPassword" FROM USERS WHERE "username"=:username 

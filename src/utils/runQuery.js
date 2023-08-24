@@ -15,7 +15,6 @@ export async function runQuery(query, commit, bindVariables) {
     });
   }
   const connection = await oracledb.getConnection();
-
   const result = await connection.execute(
     query,
     bindVariables ? bindVariables : {}
@@ -25,7 +24,7 @@ export async function runQuery(query, commit, bindVariables) {
 
   await connection.close();
 
-  return result.rows;
+  return result;
 }
 
 export async function runQueryFromFile(
