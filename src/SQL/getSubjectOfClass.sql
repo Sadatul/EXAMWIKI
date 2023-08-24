@@ -1,0 +1,2 @@
+SELECT UNIQUE "subject" FROM "EXAMWIKI"."TOPICINFO"
+WHERE "class"=:className

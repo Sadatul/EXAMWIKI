@@ -56,12 +56,12 @@ export default function Question({ questionObj, answers, setAnswers }) {
     if (isTwoColumn) {
         optionBC.reverse();
     }
-    return <div className='flex flex-row gap-5 my-5'>
+    return <div className='flex flex-row gap-2 my-5 bg-slate-100 rounded-2xl p-8 shadow-lg'>
         <div>
             <p>{questionObj.id}.</p>
         </div>
-        <div className='grow'>
-            <p className='mb-3 text-lg'>{questionObj.body}</p>
+        <div className='grow max-w-full'>
+            <p className='mb-3 text-lg' style={{ overflowWrap: 'break-word' }}>{questionObj.body}</p>
             {
                 (questionObj.image == null ? "" :
                     <div className='relative h-32 md:h-72'>
