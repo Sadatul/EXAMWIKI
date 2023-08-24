@@ -22,7 +22,10 @@ export default function examResultPage({ resultData }) {
                 <Button variant={resultData.correctCount > 0.5 * resultData.questionCount ? "success" : "danger"}
                     onClick={() => {
                         router.push({
-                            pathname: '/exam',
+                            pathname: '/exam/exam_report',
+                            query: {
+                                examId: resultData.examId,
+                            }
                         })
                     }}
                 >
@@ -74,7 +77,7 @@ export const getServerSideProps = async (context) => {
         {
             examId: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: queryData.examId },
             answers: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: queryData.answers },
-            student: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: 'sadi' },
+            student: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: studentUsername },
             correctCount: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
         }
     );
