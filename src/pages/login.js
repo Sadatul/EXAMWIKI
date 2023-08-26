@@ -1,19 +1,19 @@
-import { useUserInfo } from '@/components/useUserInfo';
 import { useFormik } from 'formik';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Alert, Button, Container, Form } from 'react-bootstrap';
 import { hashPassword } from '@/utils/hashPassword';
 import axios from 'axios';
+import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
 
 import styles from '@/styles/reg_login-form.module.css';
 import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Login() {
-  const { userInfo, error, isLoading } = useUserInfo();
-  const [failedToLogin, setFailedToLogin] = useState(false);
   const router = useRouter();
+  const [failedToLogin, setFailedToLogin] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -28,14 +28,6 @@ export default function Login() {
       else setFailedToLogin(true);
     },
   });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Connection Error</div>;
-
-  if (userInfo) {
-    router.replace('/');
-    return;
-  }
 
   return (
     <>
@@ -73,4 +65,20 @@ export default function Login() {
       </Container>
     </>
   );
+}
+
+export function getServerSideProps(ctx) {
+  const cookies = nookies.get(ctx);
+
+  try {
+    const { token } = cookies;
+    jwt.verify(token, process.env.JWT_SECRET, {
+      ignoreExpiration: true,
+    });
+    const { res } = ctx;
+    res.setHeader('location', '/');
+    res.statusCode = 302;
+    res.end();
+  } catch (e) {}
+  return { props: {} };
 }

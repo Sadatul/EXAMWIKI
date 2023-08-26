@@ -1,24 +1,14 @@
 import { useRouter } from 'next/router';
-import { useUserInfo } from '@/components/useUserInfo';
 import Head from 'next/head';
 import { Button } from 'react-bootstrap';
+import nookies, { destroyCookie } from 'nookies';
+import jwt from 'jsonwebtoken';
 
-export default function Home() {
+export default function Home({ username, type }) {
   const router = useRouter();
-  const { userInfo, error, isLoading } = useUserInfo();
 
-  if (isLoading) return <div>loading...</div>;
-  if (error) {
-    console.log(error);
-    return <div>Connection error</div>;
-  }
-  if (!userInfo) {
-    router.replace('/login');
-    return;
-  }
-
-  async function logout() {
-    await fetch('/api/logoutUser');
+  function logout() {
+    destroyCookie(null, 'token');
     router.replace('/login');
   }
 
@@ -28,11 +18,29 @@ export default function Home() {
         <title>Profile</title>
       </Head>
       <div>
-        {userInfo.username} : {userInfo.type}
+        {username} : {type}
       </div>
-      <Button variant="danger" onClick={async () => await logout()}>
+      <Button variant="danger" onClick={async () => logout()}>
         Logout
       </Button>
     </>
   );
+}
+
+export function getServerSideProps(ctx) {
+  const cookies = nookies.get(ctx);
+
+  try {
+    const { token } = cookies;
+    const { username, type } = jwt.verify(token, process.env.JWT_SECRET, {
+      ignoreExpiration: true,
+    });
+    return { props: { username, type } };
+  } catch (e) {
+    const { res } = ctx;
+    res.setHeader('location', '/login');
+    res.statusCode = 302;
+    res.end();
+    return { props: {} };
+  }
 }

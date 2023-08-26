@@ -1,8 +1,7 @@
 import { hashPassword } from '@/utils/hashPassword';
 import { runQueryFromFile } from '@/utils/runQuery';
-import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
-import { reactProductionProfiling } from '../../../next.config';
+import { setCookie } from 'nookies';
 
 export default async function handler(req, res) {
   if (req.method != 'POST') {
@@ -29,13 +28,10 @@ export default async function handler(req, res) {
         process.env.JWT_SECRET
       );
 
-      res.setHeader(
-        'Set-Cookie',
-        cookie.serialize('token', token, {
-          httpOnly: true,
-          maxAge: 60 * 60 * 24 * 7, // 1 week
-        })
-      );
+      setCookie({ res }, 'token', token, {
+        maxAge: 7 * 24 * 60 * 60,
+        path: '/',
+      });
 
       res.send({ success: true });
       return;

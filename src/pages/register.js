@@ -4,20 +4,11 @@ import { useState } from 'react';
 import { Pagination, Container } from 'react-bootstrap';
 
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { useUserInfo } from '@/components/useUserInfo';
+import jwt from 'jsonwebtoken';
+import nookies from 'nookies';
 
 export default function Register() {
-  const router = useRouter();
-  const { userInfo, error, isLoading } = useUserInfo();
-
   const [activePaginationIndex, setActivePaginationIndex] = useState(0);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (!error && userInfo) {
-    router.replace('/');
-    return;
-  }
 
   return (
     <>
@@ -45,4 +36,20 @@ export default function Register() {
       </Container>
     </>
   );
+}
+
+export function getServerSideProps(ctx) {
+  const cookies = nookies.get(ctx);
+
+  try {
+    const { token } = cookies;
+    jwt.verify(token, process.env.JWT_SECRET, {
+      ignoreExpiration: true,
+    });
+    const { res } = ctx;
+    res.setHeader('location', '/');
+    res.statusCode = 302;
+    res.end();
+  } catch (e) {}
+  return { props: {} };
 }
