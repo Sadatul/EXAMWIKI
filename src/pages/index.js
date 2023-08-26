@@ -20,7 +20,7 @@ export default function Home({ username, type }) {
       <div>
         {username} : {type}
       </div>
-      <Button variant="danger" onClick={async () => logout()}>
+      <Button variant="danger" onClick={logout}>
         Logout
       </Button>
     </>
