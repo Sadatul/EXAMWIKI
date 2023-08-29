@@ -1,7 +1,6 @@
 import Exam from "@/components/Exam";
 // import { runQueryFromFile } from "@/utils/runQuery";
 import oracledb from 'oracledb';
-import { Button } from 'react-bootstrap';
 
 const studentUsername = "sadi";
 const examId = "auto"; // This will generate an unique exam id in the database for each exam
