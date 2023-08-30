@@ -17,6 +17,7 @@
     "eslint-config-next": "13.4.13",
     "formik": "^2.4.3",
     "jsonwebtoken": "^9.0.1",
+    "lodash": "^4.17.21",
     "next": "13.4.13",
     "nookies": "^2.5.2",
     "oracledb": "^6.0.3",
