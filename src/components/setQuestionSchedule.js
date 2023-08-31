@@ -6,27 +6,37 @@ import { questionDataContext, setQuestionDataContext } from "./addQuestionContex
 // This form will save its data in questionData list index
 // index will be fixed even if the previous one gets deleted.
 
-const initialQuestionObject = {
-    deleted: false, // This is to add the feature of delete with lazy deletion
-    body: "",
-    options: [],
-    image: "",
-    answer: "",
-    difficulty: -1,
-}
-
 // The questionObject on ith index will already exist no need to add it here
 // It will be added in set-question-page.js
-export default function SetQuestionSchedule({ index, questionData, setQuestionData }) {
+export default function SetQuestionSchedule({ index, questionData, setQuestionData, topicIds }) {
     // const questionData = useContext(questionDataContext);
     // const setQuestionData = useContext(setQuestionDataContext);
-
+    let optionList = [];
+    for (let i = 0; i < topicIds.length; i++) {
+        optionList.push(
+            <option key={i} value={topicIds[i]}>
+                {topicIds[i]}
+            </option>
+        );
+    }
     const [optionE, setOptionE] = useState(false);
     // console.log("Outer" + index);
     // console.log(questionData);
     return <div className="flex flex-row justify-center mt-5">
         <Form className="w-1/2 p-10 bg-slate-100 rounded-2xl shadow-2xl relative" spellCheck="false">
             <p className="text-center">{index + 1}</p>
+            <Form.Select
+                aria-label="Default select example"
+                id={index + "topics"}
+                onChange={(e) => {
+                    let copied = JSON.parse(JSON.stringify(questionData));
+                    copied[index].topicId = e.target.value;
+                    setQuestionData(copied);
+                }}
+            >
+                <option value="">Select Topic</option>
+                {optionList}
+            </Form.Select>
             <Form.Group key="body" className="mb-3" controlId="exampleForm.ControlTextarea1">
                 {/* <Form.Label>Question Body</Form.Label> */}
                 <Form.Control as="textarea" rows={3}
