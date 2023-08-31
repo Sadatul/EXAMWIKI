@@ -58,7 +58,7 @@ export default function ScheduleExam({ repo }) {
                         }}
                     >
                         <option value="-1">Select Question Count</option>
-                        <option value="20">20</option>
+                        <option value="5">5</option>
                         <option value="40">40</option>
                     </Form.Select>
                 </Form.Group>
