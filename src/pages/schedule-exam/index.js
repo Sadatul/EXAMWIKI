@@ -91,7 +91,8 @@ export default function ScheduleExam({ repo }) {
                         }
                         onClick={() => {
                             var now = new Date();
-                            var fourHoursLater = now.setHours(now.getHours() + 2);
+                            var fourHoursLater = now.setHours(now.getHours()); // For testing purposes
+                            // var fourHoursLater = now.setHours(now.getHours() + 2);
                             if (metaData.datetime < fourHoursLater) {
                                 alert('Please select a time atleast 2 hours from now')
                                 return

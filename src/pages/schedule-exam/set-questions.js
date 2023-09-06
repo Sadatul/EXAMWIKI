@@ -75,7 +75,8 @@ export default function setQuestionPage({ questionMetaData }) {
         <Tabs
             defaultActiveKey="home"
             id="uncontrolled-tab-example"
-            className="mb-3 mt-5 w-1/2 mx-auto"
+            className="mb-3 pt-4 pb-2 px-5 w-2/3 mx-auto sticky top-0 z-10 bg-white"
+            justify
         >
             <Tab eventKey="home" title="Set Questions">
                 <div>
