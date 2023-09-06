@@ -2,12 +2,14 @@ import oracledb from 'oracledb';
 import { Button } from 'react-bootstrap';
 import { useState } from 'react';
 const studentUserName = "sadi";
+import { useRouter } from 'next/router';
 
 export default function showExamDetails({ repo }) {
     console.log(repo);
     const [isRegistered, setIsRegistered] = useState(repo.isRegistered == 'REGISTERED');
 
     let buttonToRender = "";
+    const router = useRouter();
     if (!isRegistered) {
         buttonToRender = <Button variant='success'
             onClick={async () => {
@@ -29,16 +31,15 @@ export default function showExamDetails({ repo }) {
         if (tmpDate < new Date()) {
             buttonToRender = <Button variant='success'
                 onClick={async () => {
-                    // await fetch('/api/startExam', {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //     },
-                    //     body: JSON.stringify({
-                    //         studentUserName: studentUserName,
-                    //         examId: repo.id,
-                    //     }),
-                    // })
+                    router.push({
+                        pathname: '/exam/schedule',
+                        query: {
+                            examData: JSON.stringify({
+                                examId: repo.id,
+                                questionCount: repo.QUESTION_COUNT,
+                            })
+                        }
+                    })
                 }}
             >Start Exam</Button>
         } else {
@@ -81,6 +82,10 @@ export default function showExamDetails({ repo }) {
 
 export const getServerSideProps = async (context) => {
     console.log(context.query);
+
+    if (!context.query.id) {
+        return { redirect: { destination: '/show-scheduled-exam', permanent: false } }
+    }
 
     try {
         oracledb.getPool();

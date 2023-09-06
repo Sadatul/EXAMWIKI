@@ -49,7 +49,7 @@ export default function Exam({ questionsData }) {
     return <div>
         <div className="flex flex-row justify-center">
             <ul className="w-3/4">{questionsArr}</ul>
-            <Timer questionsData={questionsData} answers={answers} time={questionsData.questionCount * 0.25 * 60} />
+            <Timer questionsData={questionsData} answers={answers} time={questionsData.examDuration * 60} />
         </div>
         <div className='flex flex-row justify-center mb-10'>
             <Button variant="primary" style={{ width: '50%' }}
@@ -64,7 +64,7 @@ export default function Exam({ questionsData }) {
                     for (let i = 0; i < questionsData.questionCount; i++) {
                         answerStr += tmp[i][1];
                     }
-
+                    console.log(answerStr);
                     router.replace({
                         pathname: '/exam/exam_result',
                         query: {

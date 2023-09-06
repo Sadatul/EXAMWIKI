@@ -57,7 +57,7 @@ export const getServerSideProps = async (context) => {
         correctCount: 0,
         examId: queryData.examId
     }
-    console.log(queryData.message);
+    console.log(queryData);
     try {
         oracledb.getPool();
     } catch (e) {

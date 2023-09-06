@@ -31,7 +31,8 @@ export const getServerSideProps = async (context) => {
         questionCount: examData.questionCount,
         array: [],
         examId: "",
-        questionIds: [] // This will be used to track the question ids in exact order
+        questionIds: [], // This will be used to track the question ids in exact order
+        examDuration: examData.questionCount * 0.25,
     }
 
     try {
@@ -97,7 +98,7 @@ export const getServerSideProps = async (context) => {
             duration: {
                 dir: oracledb.BIND_IN,
                 type: oracledb.NUMBER,
-                val: examDuration
+                val: questionsData.examDuration
             },
             confirmedExamId: {
                 dir: oracledb.BIND_OUT,
