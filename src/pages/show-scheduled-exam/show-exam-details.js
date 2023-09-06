@@ -6,7 +6,8 @@ import { useRouter } from 'next/router';
 
 export default function showExamDetails({ repo }) {
     console.log(repo);
-    const [isRegistered, setIsRegistered] = useState(repo.isRegistered == 'REGISTERED');
+    const [isRegistered, setIsRegistered] = useState(repo.isRegistered == 'REGISTERED'
+        || repo.isRegistered == "TAKEN");
 
     let buttonToRender = "";
     const router = useRouter();
@@ -26,7 +27,19 @@ export default function showExamDetails({ repo }) {
                 setIsRegistered(true);
             }}
         >Register</Button>
-    } else {
+    } else if (repo.isRegistered == 'TAKEN') {
+        buttonToRender = <Button variant='warning'
+            onClick={async () => {
+                router.push({
+                    pathname: '/exam/exam_report',
+                    query: {
+                        examId: repo.id,
+                    }
+                })
+            }}
+        >Show Answers</Button>
+    }
+    else {
         let tmpDate = new Date(repo.startDate);
         if (tmpDate < new Date()) {
             buttonToRender = <Button variant='success'
@@ -37,6 +50,7 @@ export default function showExamDetails({ repo }) {
                             examData: JSON.stringify({
                                 examId: repo.id,
                                 questionCount: repo.QUESTION_COUNT,
+                                startDate: repo.startDate,
                             })
                         }
                     })

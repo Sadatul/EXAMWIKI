@@ -57,8 +57,13 @@ export const getServerSideProps = async (context) => {
         }
     );
 
+    let tmp = new Date(examData.startDate);
+    let dif = new Date() - tmp;
+    dif = Math.round((dif / 1000) / 60);
+    if (dif < 0) dif = 0;
+
     const resultSet = data.outBinds.p_cur;
-    questionsData.examDuration = data.outBinds.duration;
+    questionsData.examDuration = data.outBinds.duration - dif;
     const result = await resultSet.getRows();
 
     for (let i = 0; i < result.length; i++) {
