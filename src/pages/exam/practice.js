@@ -1,7 +1,6 @@
 import Exam from "@/components/Exam";
 // import { runQueryFromFile } from "@/utils/runQuery";
 import oracledb from 'oracledb';
-import { Button } from 'react-bootstrap';
 
 const studentUsername = "sadi";
 const examId = "auto"; // This will generate an unique exam id in the database for each exam
@@ -32,7 +31,8 @@ export const getServerSideProps = async (context) => {
         questionCount: examData.questionCount,
         array: [],
         examId: "",
-        questionIds: [] // This will be used to track the question ids in exact order
+        questionIds: [], // This will be used to track the question ids in exact order
+        examDuration: examData.questionCount * 0.25,
     }
 
     try {
@@ -98,7 +98,7 @@ export const getServerSideProps = async (context) => {
             duration: {
                 dir: oracledb.BIND_IN,
                 type: oracledb.NUMBER,
-                val: examDuration
+                val: questionsData.examDuration
             },
             confirmedExamId: {
                 dir: oracledb.BIND_OUT,

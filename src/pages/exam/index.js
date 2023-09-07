@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { runQueryFromFile } from '@/utils/runQuery';
@@ -155,7 +154,7 @@ export default function examHome({ repo }) {
             {classOptionList}
           </Form.Select>
         </Form.Group>
-        <Form.Group className="m-2" key={examData.class} controlId="subject">
+        <Form.Group className="m-2" key={'sb' + examData.class} controlId="subject">
           <Form.Select
             aria-label="Default select example"
             id="eh-subject" // eh = exam home
@@ -172,7 +171,7 @@ export default function examHome({ repo }) {
             {subjectOptionList}
           </Form.Select>
         </Form.Group>
-        <Form.Group className="m-2" controlId="chapter">
+        <Form.Group key={'ch' + examData.subject} className="m-2" controlId="chapter">
           <Form.Select
             aria-label="Default select example"
             id="eh-chapter" // eh = exam home
@@ -188,7 +187,7 @@ export default function examHome({ repo }) {
             {chapterOptionList}
           </Form.Select>
         </Form.Group>
-        <Form.Group className="m-2" controlId="topic">
+        <Form.Group key={'to' + examData.chapter} className="m-2" controlId="topic">
           <Form.Select
             aria-label="Default select example"
             id="eh-topic" // eh = exam home

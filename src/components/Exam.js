@@ -11,9 +11,9 @@
 
 import Question from "./Question";
 import { useState } from 'react';
-import useSWR from 'swr';
 import { Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
+import Timer from "./Timer";
 
 
 // const dummyQuestion = {
@@ -39,9 +39,17 @@ export default function Exam({ questionsData }) {
         )
     }
 
+
+    // The exam can end in two ways 
+    // 1. The time runs out 
+    // 2. The student clicks the submit button
+
+    // VVIMP: The exam can end in two ways
+    // Any changes to submission procedure must be reflected in the both places..
     return <div>
         <div className="flex flex-row justify-center">
             <ul className="w-3/4">{questionsArr}</ul>
+            <Timer questionsData={questionsData} answers={answers} time={questionsData.examDuration * 60} />
         </div>
         <div className='flex flex-row justify-center mb-10'>
             <Button variant="primary" style={{ width: '50%' }}
@@ -56,8 +64,8 @@ export default function Exam({ questionsData }) {
                     for (let i = 0; i < questionsData.questionCount; i++) {
                         answerStr += tmp[i][1];
                     }
-
-                    router.push({
+                    console.log(answerStr);
+                    router.replace({
                         pathname: '/exam/exam_result',
                         query: {
                             message: 'Submission Successful',
