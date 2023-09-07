@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pagination, Container } from 'react-bootstrap';
 
 import Head from 'next/head';
+import Link from 'next/link';
 import jwt from 'jsonwebtoken';
 import nookies from 'nookies';
 
@@ -15,7 +16,13 @@ export default function Register() {
       <Head>
         <title>Register</title>
       </Head>
-      <Container style={{ textAlign: 'center', margin: '1em auto' }}>
+      <Container
+        style={{
+          textAlign: 'center',
+          margin: '1em auto 0 auto',
+          textAlign: 'center',
+        }}
+      >
         <h4>Register</h4>
         <Pagination style={{ justifyContent: 'center' }}>
           <Pagination.Item
@@ -33,6 +40,9 @@ export default function Register() {
         </Pagination>
 
         {activePaginationIndex == 0 ? <StudentForm /> : <TeacherForm />}
+        <Link href="/login" style={{ display: 'block', marginTop: '1em' }}>
+          Already have an account
+        </Link>
       </Container>
     </>
   );
@@ -47,7 +57,7 @@ export function getServerSideProps(ctx) {
       ignoreExpiration: true,
     });
     const { res } = ctx;
-    res.setHeader('location', '/');
+    res.setHeader('location', '/profile');
     res.statusCode = 302;
     res.end();
   } catch (e) {}

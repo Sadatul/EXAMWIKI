@@ -1,0 +1,1 @@
+SELECT "username", "firstname", "lastname", "instituition", "email", "image" FROM USERS WHERE "username"=:username

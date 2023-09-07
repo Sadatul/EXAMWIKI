@@ -1,0 +1,1 @@
+SELECT "username", "firstname", "lastname", "instituition", "email", "image", "class", "subject" FROM USERS NATURAL JOIN TEACHERS WHERE "username"=:username

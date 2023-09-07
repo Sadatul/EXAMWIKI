@@ -35,7 +35,7 @@ export default function Login() {
         <title>Login</title>
       </Head>
 
-      <Container style={{ margin: '2em auto' }}>
+      <Container style={{ margin: '2em auto', textAlign: 'center' }}>
         <Form onSubmit={formik.handleSubmit} className={styles.form}>
           <Form.Control
             placeholder="username"
@@ -61,7 +61,9 @@ export default function Login() {
             Username or password does not exist
           </Alert>
         )}
-        <Link href="/register">Create new account</Link>
+        <Link href="/register" style={{ marginTop: '1em', display: 'block' }}>
+          Create new account
+        </Link>
       </Container>
     </>
   );
@@ -76,7 +78,7 @@ export function getServerSideProps(ctx) {
       ignoreExpiration: true,
     });
     const { res } = ctx;
-    res.setHeader('location', '/');
+    res.setHeader('location', '/profile');
     res.statusCode = 302;
     res.end();
   } catch (e) {}

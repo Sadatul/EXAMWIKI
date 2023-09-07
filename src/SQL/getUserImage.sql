@@ -1,0 +1,1 @@
+SELECT "image" FROM USERS WHERE "username"=:username

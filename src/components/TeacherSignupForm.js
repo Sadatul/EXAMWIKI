@@ -1,15 +1,29 @@
 import axios from 'axios';
 import { useFormik } from 'formik';
-import { Button, Form, Container, Alert } from 'react-bootstrap';
+import { Button, Form, Container, Alert, ProgressBar } from 'react-bootstrap';
 import { useRouter } from 'next/router';
+
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage';
 
 import styles from '@/styles/reg_login-form.module.css';
 import { hashPassword } from '@/utils/hashPassword';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+
+const storage = getStorage();
 
 export function TeacherForm() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
+  const fileIntputRef = useRef(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [doneConfirmPassword, setDoneConfirmPassword] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -23,17 +37,59 @@ export function TeacherForm() {
       subject: '',
     },
     onSubmit: async (values) => {
+      if (values.password != confirmPassword) return;
+
+      setErrorMessage('');
+
       const data = JSON.parse(JSON.stringify(values));
-      data.image = null;
       data.password = hashPassword(data.password);
-      const response = await axios.post('/api/createTeacher', data);
-      if (response.data.success) router.replace('/');
-      else setErrorMessage(response.data.error);
+
+      for (const key in data) {
+        if (data[key] == '') data[key] = null;
+      }
+
+      async function sendDataToDatabase() {
+        const response = await axios.post('/api/createTeacher', data);
+        if (response.data.success) router.replace('/');
+        else setErrorMessage(response.data.error);
+      }
+
+      const imageFile = fileIntputRef.current.files[0];
+
+      if (imageFile) {
+        const storageRef = ref(storage, 'images/' + values.username);
+        const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setUploadProgress(progress);
+          },
+          (error) => {
+            console.error(error);
+            setErrorMessage(
+              'Something went wrong while uploading your image. It could be a network issue'
+            );
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              data.image = downloadURL;
+              setUploadProgress(0);
+              sendDataToDatabase();
+            });
+          }
+        );
+      } else {
+        data.image = null;
+        await sendDataToDatabase();
+      }
     },
   });
 
   return (
-    <Container style={{ margin: '2em auto' }}>
+    <Container style={{ margin: '2em auto 0 auto' }}>
       <Form onSubmit={formik.handleSubmit} className={styles.form}>
         <Form.Control
           placeholder="Username"
@@ -50,6 +106,18 @@ export function TeacherForm() {
           onChange={formik.handleChange}
           required
         />
+        <Form.Control
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          name="password"
+          onChange={(event) => setConfirmPassword(event.target.value)}
+          onBlur={() => setDoneConfirmPassword(true)}
+          required
+        />
+        {doneConfirmPassword && formik.values.password != confirmPassword && (
+          <Alert variant="danger">Password must match</Alert>
+        )}
         <Form.Control
           placeholder="First Name"
           value={formik.values.firstName}
@@ -85,12 +153,37 @@ export function TeacherForm() {
           placeholder="Email"
           value={formik.values.email}
           name="email"
+          required
           onChange={formik.handleChange}
         />
-        <Button variant="primary" type="submit">
+        <Form.Group style={{ textAlign: 'left', display: 'flex' }}>
+          <Form.Label style={{ marginRight: '1em' }}>Image</Form.Label>
+          <Form.Control
+            type="file"
+            accept="image/jpeg, image/png"
+            ref={fileIntputRef}
+          />
+        </Form.Group>
+        <Button
+          variant="primary"
+          type="submit"
+          disabled={
+            doneConfirmPassword && formik.values.password != confirmPassword
+          }
+        >
           Register
         </Button>
       </Form>
+
+      {uploadProgress != 0 && (
+        <ProgressBar
+          now={uploadProgress}
+          label={`${parseInt(uploadProgress)}%`}
+          variant="success"
+          style={{ margin: '2em 2em' }}
+        />
+      )}
+
       {errorMessage.length != 0 && (
         <Alert variant="danger" style={{ margin: '2em 0' }}>
           {errorMessage}
