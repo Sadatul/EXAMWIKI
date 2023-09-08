@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { Comment } from './Comment';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Blog({
   blogId,
@@ -13,11 +14,13 @@ export function Blog({
   upvotes,
   downvotes,
   postedBy,
+  image,
   hasChangeAccess,
   myVote,
   authenticated,
   handleDeleteFromPage,
 }) {
+  console.log(image);
   const [currentVote, setCurrentVote] = useState(myVote);
   const [upvoteCount, setUpvoteCount] = useState(upvotes);
   const [downvoteCount, setDownvoteCount] = useState(downvotes);
@@ -88,9 +91,27 @@ export function Blog({
   return (
     <Card style={{ margin: '2em' }}>
       <Card.Body>
-        <Card.Title>{title}</Card.Title>
+        <Card.Title
+          style={{
+            marginBottom: '1em',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div>{title}</div>
+          <div style={{ color: 'grey', fontSize: '0.8rem' }}>
+            <i>{date}</i>
+          </div>
+        </Card.Title>
         <Card.Subtitle>
-          <Link href={`/profile/${postedBy}`}>{postedBy}</Link> - {date}
+          <Image
+            src={image}
+            width={50}
+            height={50}
+            alt={postedBy}
+            style={{ display: 'inline', marginRight: '0.5em' }}
+          />
+          <Link href={`/profile/${postedBy}`}>{postedBy}</Link>
         </Card.Subtitle>
         <Card.Text style={{ whiteSpace: 'pre', margin: '1em 0 1em 0' }}>
           {body}
@@ -165,6 +186,7 @@ export function Blog({
                 key={comment.id}
                 id={comment.id}
                 user={comment.user}
+                image={comment.image}
                 blogId={blogId}
                 body={comment.body}
                 dateString={comment.dateString}

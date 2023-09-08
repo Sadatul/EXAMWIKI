@@ -2,10 +2,12 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Card, Form, Button } from 'react-bootstrap';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Comment({
   id,
   user,
+  image,
   blogId,
   body,
   dateString,
@@ -61,6 +63,13 @@ export function Comment({
       >
         <div>
           <b>
+            <Image
+              src={image}
+              alt={user}
+              width={40}
+              height={40}
+              style={{ display: 'inline', marginRight: '0.5em' }}
+            />
             <Link href={`/profile/${user}`}>{user}</Link>
           </b>
         </div>
@@ -115,6 +124,7 @@ export function Comment({
               key={reply.id}
               id={reply.id}
               user={reply.user}
+              image={reply.image}
               blogId={blogId}
               body={reply.body}
               dateString={reply.dateString}

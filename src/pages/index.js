@@ -53,6 +53,7 @@ export default function Home({ authenticated }) {
               upvotes={blog.upvotes}
               downvotes={blog.downvotes}
               postedBy={blog.postedBy}
+              image={blog.image}
               hasChangeAccess={blog.hasAccess == 'Y'}
               myVote={blog.myVote}
               handleDeleteFromPage={handleDelete}
