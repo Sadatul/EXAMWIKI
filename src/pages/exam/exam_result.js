@@ -2,8 +2,9 @@
 import oracledb from 'oracledb';
 import { useRouter } from 'next/router';
 import { Button } from 'react-bootstrap';
+import { getUserInfoFromRequest } from '@/utils/getUserInfoFromRequest';
 
-const studentUsername = "sadi";
+// const studentUsername = "sadi";
 
 export default function examResultPage({ resultData }) {
     const router = useRouter();
@@ -51,6 +52,8 @@ export const getServerSideProps = async (context) => {
         return { redirect: { destination: '/exam', permanent: false } }
     }
 
+    const { username } = getUserInfoFromRequest(context.req);
+    const studentUsername = username;
     let resultData = {
         message: queryData.message,
         questionCount: queryData.answers.length,

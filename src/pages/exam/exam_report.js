@@ -1,8 +1,9 @@
 import oracledb from 'oracledb';
 import { useRouter } from 'next/router';
 import QuestionResult from '@/components/QuestionResult';
+import { getUserInfoFromRequest } from '@/utils/getUserInfoFromRequest';
 
-const studentUsername = "sadi";
+// const studentUsername = "sadi";
 export default function ExamReport({ reportInputData }) {
     let router = useRouter();
     console.log(reportInputData);
@@ -49,6 +50,9 @@ export const getServerSideProps = async (context) => {
     if (!queryData) {
         return { redirect: { destination: '/exam', permanent: false } }
     }
+
+    const { username } = getUserInfoFromRequest(context.req);
+    const studentUsername = username;
 
     let reportInputData = {
         questionCount: -1,

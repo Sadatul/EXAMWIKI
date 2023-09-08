@@ -1,5 +1,5 @@
-
-const studentUsername = "sadi";
+import { getUserInfoFromRequest } from '@/utils/getUserInfoFromRequest';
+// const studentUsername = "sadi";
 
 import { useState } from 'react';
 import SetQuestion from '@/components/SetQuestion';
@@ -104,7 +104,7 @@ export default function setQuestionPage({ questionMetaData }) {
                 body: JSON.stringify({
                     questionMetaData,
                     questionData: res,
-                    studentUsername
+                    studentUsername: questionMetaData.studentUsername,
                 }),
             })
 
@@ -118,17 +118,25 @@ export default function setQuestionPage({ questionMetaData }) {
 }
 
 export const getServerSideProps = async (context) => {
-    let questionMetaData = context.query.questionMetaData;
-    if (!questionMetaData) {
-        return { redirect: { destination: '/add-question', permanent: false } }
-    }
-
-    questionMetaData = JSON.parse(questionMetaData);
-    // console.log(questionMetaData);
-
-    return {
-        props: {
-            questionMetaData
+    try {
+        let questionMetaData = context.query.questionMetaData;
+        if (!questionMetaData) {
+            return { redirect: { destination: '/add-question', permanent: false } }
         }
+
+        const { username } = getUserInfoFromRequest(context.req);
+        // const studentUsername = username;
+
+        questionMetaData = JSON.parse(questionMetaData);
+        // console.log(questionMetaData);
+        questionMetaData.studentUsername = username;
+        return {
+            props: {
+                questionMetaData
+            }
+        }
+    } catch (e) {
+        console.log(e);
+        return { redirect: { destination: '/login', permanent: false } }
     }
 }

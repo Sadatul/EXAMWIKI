@@ -1,6 +1,7 @@
 import oracledb from 'oracledb';
 
 export default async function handler(req, res) {
+    console.log("This is req.body");
     console.log(req.body);
     res.send("OK");
     try {
