@@ -62,7 +62,7 @@ export function StudentEditProfileForm({ info }) {
       const imageFile = fileIntputRef.current.files[0];
 
       if (imageFile) {
-        const storageRef = ref(storage, 'images/' + values.username);
+        const storageRef = ref(storage, 'images/' + info.username);
         const uploadTask = uploadBytesResumable(storageRef, imageFile);
 
         uploadTask.on(
