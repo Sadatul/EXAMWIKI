@@ -3,7 +3,7 @@ import Exam from "@/components/Exam";
 import oracledb from 'oracledb';
 
 
-const studentUserName = "sadi";
+const studentUserName = "Sadi";
 
 export default function scheduleExamPage({ questionsData }) {
     // console.log(questionsData);

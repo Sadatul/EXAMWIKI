@@ -1,7 +1,7 @@
 import oracledb from 'oracledb';
 import { Button } from 'react-bootstrap';
 import { useState } from 'react';
-const studentUserName = "sadi";
+const studentUserName = "Sadi";
 import { useRouter } from 'next/router';
 
 export default function showExamDetails({ repo }) {

@@ -70,6 +70,7 @@ export const getServerSideProps = async (context) => {
             connectString: process.env.DB_CONNECT_STRING,
         });
     }
+    // console.log(queryData.answers);
     const connection = await oracledb.getConnection();
     const query = `BEGIN
             ANSWER_UPDATE(:examId, :student, :answers, :correctCount);
