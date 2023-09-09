@@ -1,7 +1,7 @@
 import oracledb from 'oracledb';
 
 export default async function handler(req, res) {
-    console.log(typeof req.body.questionMetaData.datetime);
+    console.log(req.body);
     // res.send("OK");
     try {
         oracledb.getPool();
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
             SCHEDULEEXAM(:user, :topics, :q, :dur, :s_date);
         END;`,
         {
-            user: req.body.teacherUsername,
+            user: req.body.teacherUserName,
             topics: topics,
             q: questions,
             dur: req.body.questionMetaData.duration,
