@@ -26,8 +26,11 @@ export const getServerSideProps = async (context) => {
             return { redirect: { destination: '/exam', permanent: false } }
         }
 
-        const { username } = getUserInfoFromRequest(context.req);
+        const { username, type } = getUserInfoFromRequest(context.req);
         const studentUsername = username;
+        if (type != 'student') {
+            return { redirect: { destination: '/login', permanent: false } }
+        }
         // console.log(studentUsername);
 
         examData = JSON.parse(examData);

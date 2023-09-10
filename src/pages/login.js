@@ -81,6 +81,6 @@ export function getServerSideProps(ctx) {
     res.setHeader('location', '/profile');
     res.statusCode = 302;
     res.end();
-  } catch (e) {}
+  } catch (e) { }
   return { props: {} };
 }
