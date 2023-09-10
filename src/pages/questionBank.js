@@ -13,12 +13,21 @@ export default function QuestionBank({ topics }) {
 
   const [topicId, setTopicId] = useState('any');
   const [difficulty, setDifficulty] = useState('any');
+  const [approvedOnly, setApprovedOnly] = useState(true);
 
-  async function fetchQuestions(bound, greaterThanString, topicId, difficulty) {
+  async function fetchQuestions(
+    bound,
+    greaterThanString,
+    topicId,
+    difficulty,
+    approvedOnlyTruthValue
+  ) {
     const response = await fetch(
       `/api/getQuestions?bound=${bound}&greaterThan=${greaterThanString}&amount=${questionsPerPage}${
         topicId != 'any' ? `&topicId=${topicId}` : ''
-      }${difficulty != 'any' ? `&difficulty=${difficulty}` : ''}`
+      }${difficulty != 'any' ? `&difficulty=${difficulty}` : ''}${
+        approvedOnlyTruthValue ? '&approvedOnly=true' : ''
+      }`
     );
     const result = await response.json();
 
@@ -29,7 +38,7 @@ export default function QuestionBank({ topics }) {
   }
 
   useEffect(() => {
-    fetchQuestions(0, 'true', 'any', 'any');
+    fetchQuestions(0, 'true', 'any', 'any', approvedOnly);
   }, []);
 
   return (
@@ -50,7 +59,13 @@ export default function QuestionBank({ topics }) {
             value={topicId}
             onChange={(e) => {
               setTopicId(e.target.value);
-              fetchQuestions(0, 'true', e.target.value, difficulty);
+              fetchQuestions(
+                0,
+                'true',
+                e.target.value,
+                difficulty,
+                approvedOnly
+              );
             }}
           >
             <option value="any">Any topic</option>
@@ -65,7 +80,7 @@ export default function QuestionBank({ topics }) {
             value={difficulty}
             onChange={(e) => {
               setDifficulty(e.target.value);
-              fetchQuestions(0, 'true', topicId, e.target.value);
+              fetchQuestions(0, 'true', topicId, e.target.value, approvedOnly);
             }}
           >
             <option value="any">Any difficulty</option>
@@ -74,6 +89,19 @@ export default function QuestionBank({ topics }) {
             <option value={3}>Hard</option>
           </Form.Select>
         </div>
+        <Form.Group style={{ display: 'flex', marginTop: '1em' }}>
+          <Form.Check
+            style={{ marginRight: '0.5em' }}
+            checked={approvedOnly}
+            onChange={(e) => {
+              setHasPrevious(false);
+              setHasMext(true);
+              setApprovedOnly(e.target.checked);
+              fetchQuestions(0, 'true', topicId, difficulty, e.target.checked);
+            }}
+          />
+          <Form.Label>Show admin-approved questions only</Form.Label>
+        </Form.Group>
 
         {questions &&
           questions.map((q) => (
@@ -102,7 +130,13 @@ export default function QuestionBank({ topics }) {
               style={{ marginRight: '1em' }}
               onClick={() => {
                 setHasMext(true);
-                fetchQuestions(questions[0].id, 'false', topicId, difficulty);
+                fetchQuestions(
+                  questions[0].id,
+                  'false',
+                  topicId,
+                  difficulty,
+                  approvedOnly
+                );
               }}
             >
               Previous
@@ -116,7 +150,8 @@ export default function QuestionBank({ topics }) {
                   questions[questions.length - 1].id,
                   'true',
                   topicId,
-                  difficulty
+                  difficulty,
+                  approvedOnly
                 );
               }}
             >

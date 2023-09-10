@@ -1,7 +1,8 @@
 import { runQuery } from '@/utils/runQuery';
 
 export default async function handler(req, res) {
-  let { bound, greaterThan, amount, topicId, difficulty } = req.query;
+  let { bound, greaterThan, amount, topicId, difficulty, approvedOnly } =
+    req.query;
 
   if (!bound || (greaterThan != 'true' && greaterThan != 'false') || !amount) {
     res.send({ error: 'Parameter error' });
@@ -9,6 +10,7 @@ export default async function handler(req, res) {
   }
 
   greaterThan = greaterThan == 'true';
+  approvedOnly = approvedOnly == 'true';
   bound = parseInt(bound);
   amount = parseInt(amount);
 
@@ -20,6 +22,8 @@ export default async function handler(req, res) {
       greaterThan ? '>' : '<'
     } :bound ${topicId ? ' AND "topicId"=:topicId' : ''}${
       difficulty ? ' AND "difficulty"=:difficulty' : ''
+    }${
+      approvedOnly ? ` AND "approved"='Y'` : ''
     } ORDER BY ABS("id" - :bound)) WHERE ROWNUM <= :amount ORDER BY "id"`,
     false,
     resultBinds
@@ -36,7 +40,9 @@ export default async function handler(req, res) {
   const hasMoreResult = await runQuery(
     `SELECT * FROM QUESTIONS WHERE "id" ${greaterThan ? '>' : '<'} :bound${
       topicId ? ' AND "topicId"=:topicId' : ''
-    }${difficulty ? ' AND "difficulty"=:difficulty' : ''}`,
+    }${difficulty ? ' AND "difficulty"=:difficulty' : ''}${
+      approvedOnly ? ` AND "approved"='Y'` : ''
+    }`,
     false,
     hasMoreResultBinds
   );

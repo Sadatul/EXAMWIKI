@@ -33,7 +33,6 @@ export function Profile({ props }) {
             </div>
           </div>
         </div>
-
         <div className={styles.info}>
           <div className={styles.mainInfo}>
             <div className={styles.userRank}>
@@ -48,7 +47,6 @@ export function Profile({ props }) {
               </Link>{' '}
             </h1>
           </div>
-
           <ul className={styles.infoList}>
             {Object.keys(info).map((p) => (
               <li key={p}>
@@ -56,6 +54,9 @@ export function Profile({ props }) {
               </li>
             ))}
           </ul>
+        </div>
+        <div style={{ marginBottom: '2em' }}>
+          <Link href={`/history?username=${props.username}`}>Exam history</Link>
         </div>
       </div>
     </div>
