@@ -55,13 +55,9 @@ export function Profile({ props }) {
             ))}
           </ul>
         </div>
-        {props.type == 'student' && (
-          <div style={{ marginBottom: '2em' }}>
-            <Link href={`/history?username=${props.username}`}>
-              Exam history
-            </Link>
-          </div>
-        )}
+        <div style={{ marginBottom: '2em' }}>
+          <Link href={`/history?username=${props.username}`}>Exam history</Link>
+        </div>
       </div>
     </div>
   );
