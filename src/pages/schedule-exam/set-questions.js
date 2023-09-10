@@ -5,10 +5,11 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { questionDataContext, setQuestionDataContext } from '@/components/addQuestionContext';
 import SetQuestionSchedule from '@/components/setQuestionSchedule';
-import { runQueryFromFile } from '@/utils/runQuery';
+import { runQuery, runQueryFromFile } from '@/utils/runQuery';
+import { getUserInfoFromRequest } from '@/utils/getUserInfoFromRequest';
 import Table from 'react-bootstrap/Table';
 
-const teacherUsername = "sadi";
+// const teacherUsername = "sadi";
 const initialQuestionObject = {
     body: "",
     options: ["", "", "", ""],
@@ -130,11 +131,11 @@ export default function setQuestionPage({ questionMetaData }) {
                             body: JSON.stringify({
                                 questionMetaData,
                                 questionData: questionData,
-                                teacherUsername
+                                teacherUserName: questionMetaData.teacherUserName,
                             }),
                         })
 
-                        router.replace('/schedule-exam');
+                        router.replace('/show-scheduled-exam');
                     }}>
                         Submit
                     </Button>
@@ -162,24 +163,47 @@ export default function setQuestionPage({ questionMetaData }) {
 }
 
 export const getServerSideProps = async (context) => {
-    let questionMetaData = context.query.metaData;
-    if (!questionMetaData) {
-        return { redirect: { destination: '/schedule-exam', permanent: false } }
-    }
-    questionMetaData = JSON.parse(questionMetaData);
-    // console.log(questionMetaData);
-
-    let res = await runQueryFromFile('getTopicFromClass', false, {
-        class: questionMetaData.class,
-    });
-    questionMetaData.topics = res.rows;
-    questionMetaData.topicIds = res.rows.map((item) => {
-        return item.topicId;
-    });
-    console.log(questionMetaData);
-    return {
-        props: {
-            questionMetaData
+    try {
+        let questionMetaData = context.query.metaData;
+        if (!questionMetaData) {
+            return { redirect: { destination: '/schedule-exam', permanent: false } }
         }
+        questionMetaData = JSON.parse(questionMetaData);
+        // console.log(questionMetaData);
+
+        const { username, type } = getUserInfoFromRequest(context.req);
+        const teacherUserName = username;
+        if (type == "student") {
+            return { redirect: { destination: '/login', permanent: false } }
+        }
+        const teacherDataResult = await runQuery(
+            'SELECT * FROM TEACHERS WHERE "username"=:username',
+            false,
+            {
+                username: teacherUserName,
+            }
+        );
+        console.log(teacherDataResult.rows);
+        if (teacherDataResult.rows[0].isVerified === "N") {
+            console.log("Not verified");
+            return { redirect: { destination: '/', permanent: false } }
+        }
+        let res = await runQueryFromFile('getTopicFromClass', false, {
+            class: questionMetaData.class,
+        });
+        questionMetaData.topics = res.rows;
+        questionMetaData.topicIds = res.rows.map((item) => {
+            return item.topicId;
+        });
+        questionMetaData.teacherUserName = teacherUserName;
+        console.log(questionMetaData);
+        return {
+            props: {
+                questionMetaData
+            }
+        }
+    } catch (e) {
+        console.log(e);
+        return { redirect: { destination: '/login', permanent: false } }
     }
 }

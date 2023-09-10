@@ -6,7 +6,7 @@ import { getUserInfoFromRequest } from '@/utils/getUserInfoFromRequest';
 // const studentUsername = "sadi";
 export default function ExamReport({ reportInputData }) {
     let router = useRouter();
-    console.log(reportInputData);
+    // console.log(reportInputData);
 
     let len = reportInputData.questionCount;
     let questionsArr = [];
