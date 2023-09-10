@@ -105,6 +105,9 @@ export default function examHome({ repo }) {
     <div className="flex flex-row justify-center mt-5">
       <Form className="w-1/2 p-10 bg-slate-100 rounded-2xl shadow-2xl shadow-sky-500">
         <h1 className="mb-6 text-sky-600">Test Your Self</h1>
+        <p className="mb-6 text-red-600 text-center">Only student accounts are permitted to take practice exams.
+          <br />
+          Teacher accounts will be automatically redirected to the login page</p>
         <Form.Group className="m-2" controlId="difficult">
           <Form.Select
             aria-label="Default select example"
