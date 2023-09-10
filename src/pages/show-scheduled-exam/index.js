@@ -1,4 +1,5 @@
-import { runQueryFromFile } from "@/utils/runQuery";
+import { runQuery, runQueryFromFile } from "@/utils/runQuery";
+import { getUserInfoFromRequest } from '@/utils/getUserInfoFromRequest';
 import { useRouter } from "next/router";
 import { Button } from "react-bootstrap";
 
@@ -41,13 +42,28 @@ export default function showScheduledExam({ repo }) {
         );
     }
     return (<div className=" w-2/3 mx-auto">
+        {
+            repo.schedule_exam ? <div className="text-center my-10">
+                <Button
+                    variant="primary"
+                    onClick={() => {
+                        router.push({
+                            pathname: '/schedule-exam',
+                        });
+                    }}
+                >
+                    {' '}
+                    Schedule A New Exam{' '}
+                </Button>
+            </div> : ""
+        }
         {renderScheduledExams}
     </div>
     );
 
 }
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context) => {
     const res = await runQueryFromFile('getAllScheduledExams');
 
     for (let i = 0; i < res.rows.length; i++) {
@@ -56,8 +72,27 @@ export const getServerSideProps = async () => {
 
     const repo = {
         rows: res.rows,
+        schedule_exam: false,
     };
+    try {
+        const { username, type } = getUserInfoFromRequest(context.req);
+        if (type === "teacher") {
+            const teacherDataResult = await runQuery(
+                'SELECT * FROM TEACHERS WHERE "username"=:username',
+                false,
+                {
+                    username: username,
+                }
+            );
+            repo.schedule_exam = teacherDataResult.rows[0].isVerified === "Y";
+        }
+        console.log(repo);
+        return { props: { repo } };
+    }
+    catch (e) {
+        console.log(repo);
+        return { props: { repo } };
+    }
     // console.log(res.rows);
     // console.log(typeof res.rows[0].startDate);
-    return { props: { repo } };
 }

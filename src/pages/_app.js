@@ -18,6 +18,7 @@ export default function App({ Component, pageProps }) {
               <Nav.Link href="/profile">Profile</Nav.Link>
               <Nav.Link href="/exam">Practice Exam</Nav.Link>
               <Nav.Link href="/add-question">Add Question</Nav.Link>
+              <Nav.Link href="/show-scheduled-exam">Scheduled Exams</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

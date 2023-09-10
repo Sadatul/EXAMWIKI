@@ -204,7 +204,7 @@ export const getServerSideProps = async (context) => {
             }
         }
     } catch (e) {
-        console.log(e);
+        // console.log(e);
         return { redirect: { destination: '/login', permanent: false } }
     }
 }

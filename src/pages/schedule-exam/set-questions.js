@@ -5,7 +5,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { questionDataContext, setQuestionDataContext } from '@/components/addQuestionContext';
 import SetQuestionSchedule from '@/components/setQuestionSchedule';
-import { runQueryFromFile } from '@/utils/runQuery';
+import { runQuery, runQueryFromFile } from '@/utils/runQuery';
 import { getUserInfoFromRequest } from '@/utils/getUserInfoFromRequest';
 import Table from 'react-bootstrap/Table';
 
@@ -135,7 +135,7 @@ export default function setQuestionPage({ questionMetaData }) {
                             }),
                         })
 
-                        router.replace('/schedule-exam');
+                        router.replace('/show-scheduled-exam');
                     }}>
                         Submit
                     </Button>
@@ -176,7 +176,18 @@ export const getServerSideProps = async (context) => {
         if (type == "student") {
             return { redirect: { destination: '/login', permanent: false } }
         }
-
+        const teacherDataResult = await runQuery(
+            'SELECT * FROM TEACHERS WHERE "username"=:username',
+            false,
+            {
+                username: teacherUserName,
+            }
+        );
+        console.log(teacherDataResult.rows);
+        if (teacherDataResult.rows[0].isVerified === "N") {
+            console.log("Not verified");
+            return { redirect: { destination: '/', permanent: false } }
+        }
         let res = await runQueryFromFile('getTopicFromClass', false, {
             class: questionMetaData.class,
         });
