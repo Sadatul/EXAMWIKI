@@ -4,6 +4,8 @@ import { Card, Form, Button } from 'react-bootstrap';
 import Link from 'next/link';
 import Image from 'next/image';
 
+import emptyProfilePic from '../../none.jpg';
+
 export function Comment({
   id,
   user,
@@ -64,7 +66,7 @@ export function Comment({
         <div>
           <b>
             <Image
-              src={image}
+              src={image || emptyProfilePic}
               alt={user}
               width={40}
               height={40}

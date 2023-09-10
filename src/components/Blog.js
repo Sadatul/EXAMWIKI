@@ -6,6 +6,8 @@ import { Comment } from './Comment';
 import Link from 'next/link';
 import Image from 'next/image';
 
+import emptyProfilePic from '../../none.jpg';
+
 export function Blog({
   blogId,
   title,
@@ -20,7 +22,6 @@ export function Blog({
   authenticated,
   handleDeleteFromPage,
 }) {
-  console.log(image);
   const [currentVote, setCurrentVote] = useState(myVote);
   const [upvoteCount, setUpvoteCount] = useState(upvotes);
   const [downvoteCount, setDownvoteCount] = useState(downvotes);
@@ -105,7 +106,7 @@ export function Blog({
         </Card.Title>
         <Card.Subtitle>
           <Image
-            src={image}
+            src={image || emptyProfilePic}
             width={50}
             height={50}
             alt={postedBy}
