@@ -23,10 +23,8 @@ export default function QuestionBank({ topics }) {
     approvedOnlyTruthValue
   ) {
     const response = await fetch(
-      `/api/getQuestions?bound=${bound}&greaterThan=${greaterThanString}&amount=${questionsPerPage}${
-        topicId != 'any' ? `&topicId=${topicId}` : ''
-      }${difficulty != 'any' ? `&difficulty=${difficulty}` : ''}${
-        approvedOnlyTruthValue ? '&approvedOnly=true' : ''
+      `/api/getQuestions?bound=${bound}&greaterThan=${greaterThanString}&amount=${questionsPerPage}${topicId != 'any' ? `&topicId=${topicId}` : ''
+      }${difficulty != 'any' ? `&difficulty=${difficulty}` : ''}${approvedOnlyTruthValue ? '&approvedOnly=true' : ''
       }`
     );
     const result = await response.json();
@@ -89,7 +87,7 @@ export default function QuestionBank({ topics }) {
             <option value={3}>Hard</option>
           </Form.Select>
         </div>
-        <Form.Group style={{ display: 'flex', marginTop: '1em' }}>
+        <Form.Group className="flex flex-row justify-center text-red-500 font-bold" style={{ display: 'flex', marginTop: '1em' }}>
           <Form.Check
             style={{ marginRight: '0.5em' }}
             checked={approvedOnly}

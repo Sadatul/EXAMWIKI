@@ -6,7 +6,6 @@ import nookies, { destroyCookie } from 'nookies';
 import jwt from 'jsonwebtoken';
 import { Button, Container } from 'react-bootstrap';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 export default function UserProfilePage(props) {
   const router = useRouter();
@@ -17,8 +16,10 @@ export default function UserProfilePage(props) {
         <title>{props.username + ' - Examwiki'}</title>
       </Head>
       {props.hasAccess && (
-        <div style={{ marginTop: '1em' }}>
-          <Link href={'/editProfile'}>Edit profile</Link>
+        <div style={{ marginTop: '1em', textAlign: 'right' }}>
+          <Button onClick={() => {
+            router.push('/editProfile');
+          }}>Edit Profile</Button>
         </div>
       )}
       <Profile props={props} />
@@ -51,7 +52,7 @@ export async function getServerSideProps(context) {
       ignoreExpiration: true,
     });
     if (username == queryUsername) hasAccess = true;
-  } catch (e) {}
+  } catch (e) { }
 
   const result = await runQuery(
     'SELECT * FROM USERS WHERE "username"=:username',
@@ -74,8 +75,7 @@ export async function getServerSideProps(context) {
   const type = typeResult.rows[0].TYPE == 'Y' ? 'student' : 'teacher';
 
   const typeSpecificResult = await runQuery(
-    `SELECT * FROM ${
-      type == 'student' ? 'STUDENTS' : 'TEACHERS'
+    `SELECT * FROM ${type == 'student' ? 'STUDENTS' : 'TEACHERS'
     } WHERE "username"=:username`,
     false,
     { username: queryUsername }

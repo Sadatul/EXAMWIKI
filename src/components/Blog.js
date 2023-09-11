@@ -155,16 +155,9 @@ export function Blog({
           </div>
         )}
 
-        <span
-          style={{
-            color: 'blue',
-            textDecoration: 'underline',
-            cursor: 'pointer',
-          }}
-          onClick={handleToggleCommentSection}
-        >
+        <Button onClick={handleToggleCommentSection}>
           {!showCommentSection ? 'Expand' : 'Collapse'} Comments
-        </span>
+        </Button>
 
         {showCommentSection && (
           <div>

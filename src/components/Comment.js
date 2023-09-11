@@ -95,16 +95,9 @@ export function Comment({
         </div>
       )}
 
-      <span
-        style={{
-          color: 'blue',
-          textDecoration: 'underline',
-          cursor: 'pointer',
-        }}
-        onClick={handleToggleReplySection}
-      >
+      <Button onClick={handleToggleReplySection}>
         {!showReplySection ? 'Expand' : 'Collapse'} Replies
-      </span>
+      </Button>
       {showReplySection && (
         <div>
           {authenticated && (

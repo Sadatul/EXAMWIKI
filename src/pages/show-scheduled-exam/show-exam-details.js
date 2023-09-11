@@ -133,8 +133,8 @@ export default function showExamDetails({ repo }) {
             <p className=" text-center">Duration: {repo.duration} Minutes</p>
             <p></p>
             <p className=" text-center">Number of questions: {repo.QUESTION_COUNT}</p>
+            <div className='col-span-3 text-center'> {buttonToRender} </div>
         </div>
-        {buttonToRender}
     </div>
 }
 

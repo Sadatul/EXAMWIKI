@@ -2,6 +2,7 @@ import { runQuery, runQueryFromFile } from "@/utils/runQuery";
 import { getUserInfoFromRequest } from '@/utils/getUserInfoFromRequest';
 import { useRouter } from "next/router";
 import { Button } from "react-bootstrap";
+import Head from "next/head";
 
 export default function showScheduledExam({ repo }) {
     const router = useRouter();
@@ -41,24 +42,31 @@ export default function showScheduledExam({ repo }) {
             </div>
         );
     }
-    return (<div className=" w-2/3 mx-auto">
-        {
-            repo.schedule_exam ? <div className="text-center my-10">
-                <Button
-                    variant="primary"
-                    onClick={() => {
-                        router.push({
-                            pathname: '/schedule-exam',
-                        });
-                    }}
-                >
-                    {' '}
-                    Schedule A New Exam{' '}
-                </Button>
-            </div> : ""
-        }
-        {renderScheduledExams}
-    </div>
+    return (
+        <>
+            <Head>
+                <title>Scheduled Exam</title>
+            </Head>
+            <div className=" w-2/3 mx-auto">
+                {
+                    repo.schedule_exam ? <div className="text-center my-10">
+                        <Button
+                            variant="primary"
+                            onClick={() => {
+                                router.push({
+                                    pathname: '/schedule-exam',
+                                });
+                            }}
+                        >
+                            {' '}
+                            Schedule A New Exam{' '}
+                        </Button>
+                    </div> : ""
+                }
+                {renderScheduledExams}
+            </div>
+        </>
+
     );
 
 }

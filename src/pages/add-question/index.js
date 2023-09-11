@@ -2,6 +2,7 @@ import { Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { runQueryFromFile } from '@/utils/runQuery';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 const initialQuestionMetaData = {
   class: '',
@@ -97,116 +98,121 @@ export default function AddQuestion({ repo }) {
   }
 
   return (
-    <div className="flex flex-row justify-center mt-5">
-      <Form className="w-1/2 p-10 bg-slate-100 rounded-2xl shadow-2xl shadow-sky-500">
-        {/* <h1 className="mb-6 text-sky-600">SubjectInfo of Question</h1> */}
-        <Form.Group className="m-2" controlId="class">
-          <Form.Select
-            aria-label="Default select example"
-            id="eh-class" // eh = exam home
-            onChange={(e) => {
-              let tmp = { ...questionMetaData };
-              tmp.class = e.target.value;
-              tmp.subject = '';
-              tmp.chapter = '';
-              tmp.topic = '';
-              setQuestionMetaData(tmp);
-            }}
+    <>
+      <Head>
+        <title>Add Question</title>
+      </Head>
+      <div className="flex flex-row justify-center mt-5">
+        <Form className="w-1/2 p-10 bg-slate-100 rounded-2xl shadow-2xl shadow-sky-500">
+          {/* <h1 className="mb-6 text-sky-600">SubjectInfo of Question</h1> */}
+          <Form.Group className="m-2" controlId="class">
+            <Form.Select
+              aria-label="Default select example"
+              id="eh-class" // eh = exam home
+              onChange={(e) => {
+                let tmp = { ...questionMetaData };
+                tmp.class = e.target.value;
+                tmp.subject = '';
+                tmp.chapter = '';
+                tmp.topic = '';
+                setQuestionMetaData(tmp);
+              }}
+            >
+              <option value="">Select Class</option>
+              {classOptionList}
+            </Form.Select>
+          </Form.Group>
+          <Form.Group
+            className="m-2"
+            key={'sb' + questionMetaData.class}
+            controlId="subject"
           >
-            <option value="">Select Class</option>
-            {classOptionList}
-          </Form.Select>
-        </Form.Group>
-        <Form.Group
-          className="m-2"
-          key={'sb' + questionMetaData.class}
-          controlId="subject"
-        >
-          <Form.Select
-            aria-label="Default select example"
-            id="eh-subject" // eh = exam home
-            onChange={(e) => {
-              let tmp = { ...questionMetaData };
-              tmp.subject = e.target.value;
-              tmp.chapter = '';
-              tmp.topic = '';
-              setQuestionMetaData(tmp);
-            }}
-            disabled={questionMetaData.class == ''}
+            <Form.Select
+              aria-label="Default select example"
+              id="eh-subject" // eh = exam home
+              onChange={(e) => {
+                let tmp = { ...questionMetaData };
+                tmp.subject = e.target.value;
+                tmp.chapter = '';
+                tmp.topic = '';
+                setQuestionMetaData(tmp);
+              }}
+              disabled={questionMetaData.class == ''}
+            >
+              <option value="">Select Subject</option>
+              {subjectOptionList}
+            </Form.Select>
+          </Form.Group>
+          <Form.Group
+            className="m-2"
+            key={'ch' + questionMetaData.subject}
+            controlId="chapter"
           >
-            <option value="">Select Subject</option>
-            {subjectOptionList}
-          </Form.Select>
-        </Form.Group>
-        <Form.Group
-          className="m-2"
-          key={'ch' + questionMetaData.subject}
-          controlId="chapter"
-        >
-          <Form.Select
-            aria-label="Default select example"
-            id="eh-chapter" // eh = exam home
-            onChange={(e) => {
-              let tmp = { ...questionMetaData };
-              tmp.chapter = e.target.value;
-              tmp.topic = '';
-              setQuestionMetaData(tmp);
-            }}
-            disabled={questionMetaData.subject == ''}
+            <Form.Select
+              aria-label="Default select example"
+              id="eh-chapter" // eh = exam home
+              onChange={(e) => {
+                let tmp = { ...questionMetaData };
+                tmp.chapter = e.target.value;
+                tmp.topic = '';
+                setQuestionMetaData(tmp);
+              }}
+              disabled={questionMetaData.subject == ''}
+            >
+              <option value="">Select Chapter</option>
+              {chapterOptionList}
+            </Form.Select>
+          </Form.Group>
+          <Form.Group
+            className="m-2"
+            key={'to' + questionMetaData.chapter}
+            controlId="topic"
           >
-            <option value="">Select Chapter</option>
-            {chapterOptionList}
-          </Form.Select>
-        </Form.Group>
-        <Form.Group
-          className="m-2"
-          key={'to' + questionMetaData.chapter}
-          controlId="topic"
-        >
-          <Form.Select
-            aria-label="Default select example"
-            id="eh-topic" // eh = exam home
-            onChange={(e) => {
-              let tmp = { ...questionMetaData };
-              tmp.topic = e.target.value;
-              setQuestionMetaData(tmp);
-            }}
-            disabled={questionMetaData.chapter == ''}
-          >
-            <option value="">Select Topic</option>
-            {topicOptionList}
-          </Form.Select>
-        </Form.Group>
-        <div className="flex flex-row justify-end mr-3">
-          <Button
-            variant="primary"
-            disabled={
-              questionMetaData.chapter == '' ||
-              questionMetaData.class == '' ||
-              questionMetaData.subject == '' ||
-              questionMetaData.topic == ''
-            }
-            onClick={() => {
-              router.push({
-                pathname: '/add-question/set-question',
-                query: { questionMetaData: JSON.stringify(questionMetaData) },
-              });
-            }}
-          >
-            {' '}
-            Confirm
-          </Button>
-        </div>
-      </Form>
-      {/* <Link
+            <Form.Select
+              aria-label="Default select example"
+              id="eh-topic" // eh = exam home
+              onChange={(e) => {
+                let tmp = { ...questionMetaData };
+                tmp.topic = e.target.value;
+                setQuestionMetaData(tmp);
+              }}
+              disabled={questionMetaData.chapter == ''}
+            >
+              <option value="">Select Topic</option>
+              {topicOptionList}
+            </Form.Select>
+          </Form.Group>
+          <div className="flex flex-row justify-end mr-3">
+            <Button
+              variant="primary"
+              disabled={
+                questionMetaData.chapter == '' ||
+                questionMetaData.class == '' ||
+                questionMetaData.subject == '' ||
+                questionMetaData.topic == ''
+              }
+              onClick={() => {
+                router.push({
+                  pathname: '/add-question/set-question',
+                  query: { questionMetaData: JSON.stringify(questionMetaData) },
+                });
+              }}
+            >
+              {' '}
+              Confirm
+            </Button>
+          </div>
+        </Form>
+        {/* <Link
                 href={{
                     pathname: '/exam/practice',
                     query: { questionMetaData: 'my-post' },
                 }}
             ></Link> */}
 
-      {/* <Exam questionMetaData={questionMetaData} /> */}
-    </div>
+        {/* <Exam questionMetaData={questionMetaData} /> */}
+      </div>
+    </>
   );
 }
 

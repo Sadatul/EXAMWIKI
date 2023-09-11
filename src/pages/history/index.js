@@ -3,6 +3,8 @@ import { Button } from 'react-bootstrap';
 import { Table } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Head from 'next/head';
+
 
 export default function HistoryPage({ repo }) {
   const router = useRouter();
@@ -43,23 +45,28 @@ export default function HistoryPage({ repo }) {
   }
 
   return (
-    <div>
-      <div className="text-center text-3xl font-bold mt-5">
-        Exam History of {repo.username}
+    <>
+      <Head>
+        <title>History</title>
+      </Head>
+      <div>
+        <div className="text-center text-3xl font-bold mt-5">
+          Exam History of {repo.username}
+        </div>
+        <div className="w-2/3 mt-5 mx-auto">
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Exam Id</th>
+                <th>Date</th>
+                <th className="text-center">Link</th>
+              </tr>
+            </thead>
+            <tbody>{examList}</tbody>
+          </Table>
+        </div>
       </div>
-      <div className="w-2/3 mt-5 mx-auto">
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Exam Id</th>
-              <th>Date</th>
-              <th className="text-center">Link</th>
-            </tr>
-          </thead>
-          <tbody>{examList}</tbody>
-        </Table>
-      </div>
-    </div>
+    </>
   );
 }
 

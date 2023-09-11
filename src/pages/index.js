@@ -2,6 +2,7 @@ import { Blog } from '@/components/Blog';
 import { getUserInfoFromRequest } from '@/utils/getUserInfoFromRequest';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 
@@ -12,6 +13,7 @@ export default function Home({ authenticated }) {
   const [blogCount, setBlogCount] = useState(blogIncrement);
 
   const [hasMore, setHasMore] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     fetch(`/api/getBlogs?blogCount=${blogCount}`).then((response) =>
@@ -37,8 +39,10 @@ export default function Home({ authenticated }) {
       </Head>
       <Container style={{ margin: '0 auto' }}>
         {authenticated && (
-          <div style={{ margin: '1em' }}>
-            <Link href="/createBlog">Create Blog</Link>
+          <div style={{ margin: '1em', textAlign: 'center' }}>
+            <Button onClick={() => {
+              router.push('/createBlog');
+            }}>Create Blog</Button>
           </div>
         )}
         <div>
