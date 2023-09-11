@@ -1,5 +1,5 @@
 import { hashPassword } from '@/utils/hashPassword';
-import { runQueryFromFile } from '@/utils/runQuery';
+import { runQuery, runQueryFromFile } from '@/utils/runQuery';
 import jwt from 'jsonwebtoken';
 import { setCookie } from 'nookies';
 
@@ -32,6 +32,8 @@ export default async function handler(req, res) {
         maxAge: 7 * 24 * 60 * 60,
         path: '/',
       });
+
+      await runQuery(`INSERT INTO PROCEDURE_FUNCTION_LOG_TABLE VALUES('LOGIN', 'PROCEDURE', USER, SYSDATE, :username, 'USER')`, true, { username: req.body.username });
 
       res.send({ success: true });
       return;

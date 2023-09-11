@@ -30,6 +30,7 @@ export default function HistoryPage({ repo }) {
             href={{
               pathname: '/exam/exam_report',
               query: {
+                username: repo.username,
                 examId: repo.rows[i].exam,
               },
             }}

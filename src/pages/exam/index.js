@@ -142,7 +142,7 @@ export default function examHome({ repo }) {
               <option value="-1">Select Question Count</option>
               <option value="20">20</option>
               <option value="40">40</option>
-              <option value="100">100</option>
+              {/* <option value="100">100</option> */}
             </Form.Select>
           </Form.Group>
           <Form.Group className="m-2" controlId="class">

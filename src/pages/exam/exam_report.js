@@ -51,8 +51,14 @@ export const getServerSideProps = async (context) => {
         return { redirect: { destination: '/exam', permanent: false } }
     }
 
-    const { username } = getUserInfoFromRequest(context.req);
-    const studentUsername = username;
+    let studentUsername;
+    if (!context.query.username) {
+        const { username } = getUserInfoFromRequest(context.req);
+        studentUsername = username;
+    }
+    else {
+        studentUsername = context.query.username
+    }
 
     let reportInputData = {
         questionCount: -1,
