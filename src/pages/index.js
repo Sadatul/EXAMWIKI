@@ -66,9 +66,11 @@ export default function Home({ authenticated }) {
         </div>
 
         {hasMore && (
-          <Button onClick={() => setBlogCount(blogCount + blogIncrement)}>
-            Show more
-          </Button>
+          <div style={{ textAlign: 'center', marginBottom: '2em' }}>
+            <Button onClick={() => setBlogCount(blogCount + blogIncrement)}>
+              Show more
+            </Button>
+          </div>
         )}
       </Container>
     </>
